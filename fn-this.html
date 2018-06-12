@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>this</title>
+</head>
+<body>
+	<div>
+		<h1>jQuery 源码 拆解(1) </h1>
+		<p class="content on">1.1).jQuery.extend -- this指向</p>
+	</div>
+	<script>
+		//普通函数
+		(function(window,undefined){
+			var _jQuery = window.jQuery,
+			_$ = window.$;
+			var  jQuery = function(){
+				console.log(this===window); //true,this指向window
+			};
+			jQuery.trim= function(text){
+				console.log(this===jQuery);	//true,this指向 函数 jQuery
+				return text == null ? "":String.prototype.trim.apply(text);
+			},
+			jQuery.extend = function(){ 	//拷贝			
+				console.log(this===jQuery); //true,this指向 函数 jQuery
+				var name,
+				i=1,
+				len = arguments.length,
+				target = arguments[0]||{};				
+				if(i === len){
+					target = this;
+					i--;
+				}				
+				for (; i < len; i++) {
+					if(arguments[i] !== null){
+						for(name in arguments[i]){
+							target[name] = arguments[i][name];
+						}	
+					}				
+				}
+				return target;			
+			}
+			jQuery.extend({
+				type:function(obj){
+					var typeList;
+					console.log(this===jQuery);	//true,this指向 函数 jQuery  
+					typeList = "Boolean Number String Function Array Date RegExp Object Error".split(" ").reduce(function(total,item){
+						 total["[object " + item + "]"] = item.toLowerCase();
+						 return total;
+					},{});
+					return typeList[Object.prototype.toString.apply(obj)];					
+				}
+			});
+			window.jQuery = window.$ = jQuery ;			
+		})(window);
+		$(); 
+		var str = new String("test");
+		$.trim();
+		$.type(str);//string
+	</script>
+</body>
+</html>
