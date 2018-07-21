@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>变量与变量提升</title>
+	<link href="http://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">  
+	<script src="http://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>  
+	<script>hljs.initHighlightingOnLoad();</script>  
+	<style>
+		body{
+			font-family: "Microsfot YaHei";	
+			font-size: 12px;
+			color:#75715e;
+		}
+		body,figure,pre,p{
+			margin:0;
+		}
+		.wrap{
+			width: 850px;
+			margin:15px auto 0;
+		}	
+		.box{
+			margin:10px 0;
+			border:1px solid #ddd;
+			border-radius: 5px;
+			background: #fff;
+		}
+		.box h2{
+			color: #959595;
+			font-size: 14px;
+			text-indent: 1em;
+		}
+		.box p{
+			padding: 10px 0 10px 1em;
+		}	
+		.hljs {				
+		    border: 0;
+		    font-size: 12px;
+		    display: block;
+		    padding: 1px;
+		    margin: 0;
+		    width: 100%;
+		    font-weight: 200;		   
+		    white-space: pre-wrap;		    
+		}
+		.hljs ol {		   
+		    margin: 0px 0px 0 40px !important;
+		    padding: 0px;
+		}
+		.hljs ol li {
+		    list-style: decimal;
+		    border-left: 1px solid #ddd !important;
+		    padding: 5px 1em!important;
+		    margin: 0 !important;
+		    white-space: pre;
+		}
+		.reference{
+			padding: 20px 0;
+			background: #f2f2f2;
+			line-height: 26px;
+			text-indent: 1em;
+		}				
+	</style>
+</head>
+<body>		
+	<div class="wrap">	
+		<h1>变量提升的一些琢磨</h1>
+		<div class="box">
+			<h2>1.变量与参数</h2>
+			<pre><code id="desc1" class="javascript"></code></pre>
+			<p>结果：1，1，2 和 4，4，3。参数 name 等同于局部变量，此时 this 指向 window</p>
+		</div>
+		<div class="box">
+			<h2>2.重复声明变量</h2>
+			<pre><code id="desc2" class="javascript"></code></pre>
+			<p>结果：1，2。一个变量在同一作用域中已经声明过，会自动移除 var 声明，但是赋值操作依旧保留</p>
+		</div>
+		<div class="box">
+			<h2>3.自动提升为全局变量</h2>
+			<pre><code id="desc3" class="javascript"></code></pre>
+			<p>结果：1。y 自动提升为全局变量 。</p>
+		</div>
+		<div class="box">
+			<h2>4.变量提升</h2>
+			<pre><code id="desc4" class="javascript"></code></pre>
+			<p>结果：2。变量提升，相当于：var test3；if (...) { test3 = 2; console.log(test3) } else{...}</p>
+		</div>
+		<div class="box">
+			<h2>5.普通函数</h2>
+			<pre><code id="desc5" class="javascript"></code></pre>
+			<p>结果：undefined，1，1，true 和 2，1，1 和 2，3，3</p>
+		</div>
+		<div class="box">
+			<h2>6.构造函数</h2>
+			<pre><code id="desc6" class="javascript"></code></pre>
+			<p>结果：undefined，undefined，1，false 和 2，undefined，1 和  2，3，1 和 true。构造函数 this 指向实例 test6  </p>
+		</div>
+		<div class="box">
+			<h2>7.函数声明、函数表达式 和变量</h2>
+			<pre><code id="desc7" class="javascript"></code></pre>
+			<p>结果：function g(){ return 4 }，3 和 function g(){ return 2 }，function(){ return 1};</p>
+		</div>
+		<div class="box">
+			<h2>8.函数声明、函数表达式 和变量的延展</h2>
+			<pre><code id="desc8" class="javascript"></code></pre>
+			<p>结果： function h() { return 1} 和 1</p>
+		</div>
+		<div class="box">
+			<h2>9.函数声明、函数表达式 和变量的延展</h2>
+			<pre><code id="desc9" class="javascript"></code></pre>
+			<p>结果： 2</p>
+		</div>		
+	</div>	
+	<div class="reference">
+		<div class="wrap">
+			<p>参考地址：</p>
+			<p>https://www.jianshu.com/p/e161bd720e64</p>
+			<p>https://blog.csdn.net/Night_Emperor/article/details/77206970</p>
+		</div>
+	</div>
+<script id="test1">
+var a = 1;
+function test1a(a){
+	console.log(window.a,this.a,a);	
+};	
+test1a(2);
+
+function test1b(a){    
+	window.a=4;
+	console.log(window.a,this.a,a); 
+};
+test1b(3);
+</script> 
+<script id="test2">
+function test2a(b) { 
+	var b; 
+	return b;
+};
+console.log(test2a(1));
+
+function test2b(b) { 
+	var b = 2; 
+	return b;
+};
+console.log(test2b(1))
+</script> 
+<script id="test3">
+(function(){  
+	//console.log(d);	//y is not defined,全局变量 y 没有定义,故不会提升
+	var c = d = 1;
+})();
+//console.log(x);	//x is not defined,x 是局部变量
+console.log(d);
+</script> 
+<script id="test4">
+var test4 = 1;
+(function () {		
+    if (typeof test4 === 'undefined') {
+      var test4 = 2; 	//留意此处的变量声明
+      console.log(test4);
+    } else {
+      console.log(test4);
+    }
+})();	
+</script>
+<script id="test5">	
+var e = 1; 
+function test5(){	
+	console.log(e,this.e,window.e,this === window);
+	var e = 2;
+	console.log(e,this.e,window.e);
+	this.e = 3;
+	console.log(e,this.e,window.e);
+};
+test5();
+</script> 
+<script id="test6">	
+var f = 1; 
+function Test6(){	
+	_this = this;
+	console.log(f,this.f,window.f,this === window);
+	var f = 2;
+	console.log(f,this.f,window.f);
+	this.f = 3;
+	console.log(f,this.f,window.f);
+};
+var test6 = new Test6();
+console.log(_this === test6);	
+</script> 
+<script id="test7">
+var g = 1;
+function test7a(g) {
+	console.log(g);
+	var g = 3;
+	function g(){ return 4 };	//函数声明	
+	console.log(g);
+};
+test7a(2);// var g; g=2; function g(){};console.log(g);  g=3; console.log(g);
+
+function test7b(){
+	console.log(g);	
+	var g = function(){ return 1}; //函数表达式		
+	function g(){ return 2};
+	console.log(g);
+};
+test7b();		
+</script>
+<script id="test8">
+function test8a(){			
+	return h;
+	function h() { return 1}; 				
+	var h = 2;  			
+	var h = function(){ return 3};	  	
+};
+console.log(test8a());	
+//相当于： function test8a(){ var h; function h() { return 2}; return h; }
+
+function test8b(){	 
+	var h = 1; 
+	return h;
+	var h = 2; 
+	function h() { return 3}; 					 			
+	var h = function(){ return 4};	  	
+};
+console.log(test8b());	
+//相当于：function test8b(){	var h; function h() { return 2}; h = 1; return h; ...}	
+</script>
+<script id="test9">
+var i = 1;
+function test9(){
+	if(i in window){  //undefined in window 结果:true
+		var i = 2;
+	}
+	console.log(i);
+};
+test9();
+//相当于：function test9(){ var i;  if(i in window){ i = 2}; console.log(i); 
+</script>
+<script>
+	//先去除源码的前后空格，放入code中
+	function showCode(box,code){
+		var txt = document.getElementById(code).innerHTML.replace(/(^\s+)|(\s+$)/g,"");			
+		document.getElementById(box).innerHTML=txt;
+	};
+	showCode("desc1","test1");
+	showCode("desc2","test2");
+	showCode("desc3","test3");
+	showCode("desc4","test4");
+	showCode("desc5","test5");
+	showCode("desc6","test6");
+	showCode("desc7","test7");
+	showCode("desc8","test8");
+	showCode("desc9","test9");
+	//每行源码用 li 包裹，来实现行数
+	var elems = document.getElementsByTagName("code");
+	for (var i = 0; i < elems.length; i++) {
+		elems[i].index = i;
+		elems[i].innerHTML = "<ol><li>" + elems[i].innerHTML .replace(/\n/g,"\n</li><li>") +"\n</li></ol>";
+	}
+</script>	
+</body>
+</html>
