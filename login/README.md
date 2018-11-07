@@ -1,6 +1,6 @@
-# login
+# Vue + Express + Mysql 登陆演示项目
 
-> A Vue.js project
+> 使用vue2.x + vue-cli +vue-router+ vuex + axios + mysql + express + webpack 
 
 ## Build Setup
 
