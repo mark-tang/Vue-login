@@ -1,6 +1,6 @@
 # Vue + Express + Mysql 登陆演示项目
 
-> 使用 vue2.x + vue-cli +vue-router+ vuex + axios + mysql + express + webpack 
+> Using vue2.x + vue-cli +vue-router+ vuex + axios + mysql + express + webpack + pm2
 
 ## Build Setup
 
@@ -11,6 +11,6 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
-# run node.js     login>servser>app.js
-node app.js
+# run node.js     login>servser>app.js  
+pm2 start app 
 
