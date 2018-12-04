@@ -5,6 +5,9 @@
 ## Build Setup
 
 ``` bash
+# install pm2
+npm install  -g pm2
+
 # install dependencies
 npm install
 
